@@ -1,7 +1,7 @@
 import CloseModal from "@/components/closemodal";
 import SignIn from "@/components/signin";
 
-const page = ({}) => {
+export default function page() {
   return (
     <div className="fixed inset-0 bg-zinc-900/20 z-10">
       <div className="container flex items-center h-full max-w-lg mx-auto">
@@ -15,6 +15,4 @@ const page = ({}) => {
       </div>
     </div>
   );
-};
-
-export default page;
+}

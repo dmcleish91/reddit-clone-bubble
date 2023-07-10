@@ -1,6 +1,13 @@
 'use client';
 import { User } from 'next-auth';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 import UserAvatar from './useravatar';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
@@ -29,7 +36,7 @@ export default function UserAccountNav({ user }: UserAccountNavProps) {
           <Link href='/'>Feed</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href='/create'>Create Community</Link>
+          <Link href='r/create'>Create Community</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href='/settings'>Settings</Link>
