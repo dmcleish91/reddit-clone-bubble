@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import axios, { AxiosError } from 'axios';
 import { CreditSubredditPayload } from '@/lib/validators/subreddit';
 import { toast } from '@/hooks/use-toast';
 import useCustomToast from '@/hooks/use-custom-toast';
+import ButtonUI from '@/components/ui/buttonUI';
 
 export default function Page() {
   const [input, setInput] = useState<string>('');
