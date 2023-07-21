@@ -3,7 +3,7 @@ import { PostCreationRequest, PostValidator } from '@/lib/validators/post';
 import { useForm } from 'react-hook-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type EditorJS from '@editorjs/editorjs';
 import { uploadFiles } from '@/lib/uploadthing';
 import { toast } from '@/hooks/use-toast';
