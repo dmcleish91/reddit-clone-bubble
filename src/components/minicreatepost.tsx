@@ -24,7 +24,7 @@ export default function MiniCreatePost({ session }: MiniCreatePostProps) {
         </div>
         <Input readOnly onClick={() => router.push(pathname + '/submit')} placeholder='Create Post' />
 
-        <Button variant='ghost'>
+        <Button variant='ghost' onClick={() => router.push(pathname + '/submit')}>
           <ImageIcon className='text-zinc-600' />
         </Button>
         <Button variant='ghost' onClick={() => router.push(pathname + '/submit')}>

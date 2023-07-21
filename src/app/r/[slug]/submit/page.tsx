@@ -1,3 +1,5 @@
+import Editor from '@/components/editor';
+import { Button } from '@/components/ui/button';
 import { db } from '@/lib/db';
 import { notFound } from 'next/navigation';
 
@@ -23,6 +25,15 @@ export default async function Page({ params }: PageProps) {
           <h3 className='ml-2 mt-2 text-base font-semibold leading-6 text-gray-900'>Create Post</h3>
           <p className='ml-2 mt-1 truncate text-sm text-gray-500'>in r/{subreddit.name}</p>
         </div>
+      </div>
+
+      {/* form */}
+      <Editor subredditId={subreddit.id} />
+
+      <div className='w-full flex justify-end'>
+        <Button form='subreddit-post-form' type='submit' className='w-full'>
+          Post
+        </Button>
       </div>
     </div>
   );
