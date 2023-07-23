@@ -128,6 +128,8 @@ export default function Editor({ subredditId }: EditorProps) {
         subredditId,
       };
       const { data } = await axios.post('/api/subreddit/post/create', payload);
+      console.log('split', pathname.split('/'));
+      console.log('slice', pathname.split('/').slice(0, -1));
       return data;
     },
     onError: () => {
@@ -138,8 +140,6 @@ export default function Editor({ subredditId }: EditorProps) {
       });
     },
     onSuccess: () => {
-      console.log('split', pathname.split('/'));
-      console.log('slice', pathname.split('/').slice(0, -1));
       const newPathname = pathname.split('/').slice(0, -1).join('/');
       router.push(newPathname);
       router.refresh();

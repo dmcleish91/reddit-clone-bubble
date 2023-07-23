@@ -1,4 +1,5 @@
 import MiniCreatePost from '@/components/minicreatepost';
+import PostFeed from '@/components/postfeed';
 import { INFINITE_SCROLLING_PAGINATION_RESULTS } from '@/config';
 import { getAuthSession } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -39,6 +40,7 @@ export default async function Page({ params }: PageProps) {
     <>
       <h1 className='flex font-bold text-3xl md:text-4xl h-20 items-center'>r/{subreddit.name}</h1>
       <MiniCreatePost session={session} />
+      <PostFeed initialPosts={subreddit.posts} subredditName={subreddit.name} />
       {/* TODO: Show posts in user feed */}
     </>
   );
