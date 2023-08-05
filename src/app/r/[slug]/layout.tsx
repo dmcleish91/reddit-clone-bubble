@@ -66,7 +66,7 @@ export default async function Layout({
               <p className='font-semibold py-3'>About r/{subreddit.name}</p>
             </div>
 
-            <dl className='divide-y divide-gray-100 px-6 py-4 text-sm leading-6 bg-white'>
+            <dl className='divide-y divide-gray-200 px-6 py-4 text-sm leading-6 bg-white'>
               <div className='flex justify-between gap-x-4 py-3'>
                 <dt className='text-gray-500'>Created</dt>
                 <dd className='text-gray-700'>
@@ -95,9 +95,7 @@ export default async function Layout({
                 />
               ) : null}
 
-              <Link
-                className={buttonVariants({ variant: 'outline', className: 'w-full mb-6' })}
-                href={`${slug}/submit`}>
+              <Link className={buttonVariants({ variant: 'ghost', className: 'w-full mb-6' })} href={`${slug}/submit`}>
                 Create Post
               </Link>
             </dl>

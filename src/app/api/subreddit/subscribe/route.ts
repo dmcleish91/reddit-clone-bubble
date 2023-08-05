@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     return new Response(subredditId);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return new Response('invalid request data passed', { status: 422 });
+      return new Response('invalid POST request data passed', { status: 422 });
     }
 
     return new Response('Could not subscribe, try again later', { status: 500 });
