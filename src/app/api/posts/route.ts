@@ -47,7 +47,7 @@ export async function GET(req: Request) {
       whereClause = {
         subreddit: {
           id: {
-            id: followedCommunitiesIds,
+            in: followedCommunitiesIds,
           },
         },
       };

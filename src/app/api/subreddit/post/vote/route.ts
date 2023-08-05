@@ -42,7 +42,6 @@ export async function PATCH(req: Request) {
 
     if (existingVote) {
       if (existingVote.type === voteType) {
-        console.log('deleting vote');
         await db.vote.delete({
           where: {
             userId_postId: {
@@ -55,7 +54,6 @@ export async function PATCH(req: Request) {
         return new Response('OK');
       }
 
-      console.log('updating vote');
       await db.vote.update({
         where: {
           userId_postId: {
@@ -73,7 +71,6 @@ export async function PATCH(req: Request) {
       return new Response('OK');
     }
 
-    console.log('creating vote');
     await db.vote.create({
       data: {
         type: voteType,

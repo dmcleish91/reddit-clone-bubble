@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { PostVoteRequest } from '@/lib/validators/vote';
 import axios, { AxiosError } from 'axios';
 import { toast } from '@/hooks/use-toast';
+import { useSession } from 'next-auth/react';
 
 type PostVoteClientProps = {
   postId: string;
@@ -22,6 +23,7 @@ export default function PostVoteClient({ postId, initialVotesAmount, initialVote
   const [votesAmount, setVotesAmount] = useState<number>(initialVotesAmount);
   const [currentVote, setCurrentVote] = useState<'UP' | 'DOWN' | null | undefined>(initialVote);
   const prevVote = usePrevious(currentVote);
+  const session = useSession();
 
   useEffect(() => {
     setCurrentVote(initialVote);
@@ -33,14 +35,16 @@ export default function PostVoteClient({ postId, initialVotesAmount, initialVote
         postId,
         voteType,
       };
-      console.log(payload);
+
       await axios.patch('/api/subreddit/post/vote', payload);
     },
     onError: (err, voteType) => {
-      if (voteType === 'UP') {
-        setVotesAmount((prev) => prev - 1);
-      } else {
-        setVotesAmount((prev) => prev + 1);
+      if (session.status === 'authenticated') {
+        if (voteType === 'UP') {
+          setVotesAmount((prev) => prev - 1);
+        } else {
+          setVotesAmount((prev) => prev + 1);
+        }
       }
 
       //reset current vote
@@ -48,7 +52,7 @@ export default function PostVoteClient({ postId, initialVotesAmount, initialVote
 
       if (err instanceof AxiosError) {
         if (err.response?.status === 401) {
-          loginToast();
+          return loginToast();
         }
       }
 
@@ -59,19 +63,21 @@ export default function PostVoteClient({ postId, initialVotesAmount, initialVote
       });
     },
     onMutate: (updatedVoteType: VoteType) => {
-      if (currentVote === updatedVoteType) {
-        setCurrentVote(undefined);
-        if (updatedVoteType === 'UP') {
-          setVotesAmount((prev) => prev - 1);
-        } else if (updatedVoteType === 'DOWN') {
-          setVotesAmount((prev) => prev + 1);
-        }
-      } else {
-        setCurrentVote(updatedVoteType);
-        if (updatedVoteType === 'UP') {
-          setVotesAmount((prev) => prev + (currentVote ? 2 : 1));
-        } else if (updatedVoteType === 'DOWN') {
-          setVotesAmount((prev) => prev - (currentVote ? 2 : 1));
+      if (session.status === 'authenticated') {
+        if (currentVote === updatedVoteType) {
+          setCurrentVote(undefined);
+          if (updatedVoteType === 'UP') {
+            setVotesAmount((prev) => prev - 1);
+          } else if (updatedVoteType === 'DOWN') {
+            setVotesAmount((prev) => prev + 1);
+          }
+        } else {
+          setCurrentVote(updatedVoteType);
+          if (updatedVoteType === 'UP') {
+            setVotesAmount((prev) => prev + (currentVote ? 2 : 1));
+          } else if (updatedVoteType === 'DOWN') {
+            setVotesAmount((prev) => prev - (currentVote ? 2 : 1));
+          }
         }
       }
     },

@@ -4,6 +4,7 @@ import { MessageSquare } from 'lucide-react';
 import { useRef } from 'react';
 import EditorOutput from './editoroutput';
 import PostVoteClient from './post-vote/postvoteclient';
+import { getAuthSession } from '@/lib/auth';
 
 type PartialVote = Pick<Vote, 'type'>;
 

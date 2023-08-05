@@ -2,9 +2,12 @@ import { db } from '@/lib/db';
 import PostFeed from './postfeed';
 import { INFINITE_SCROLLING_PAGINATION_RESULTS } from '@/config';
 import { getAuthSession } from '@/lib/auth';
+import { notFound } from 'next/navigation';
 
 export default async function CustomFeed() {
   const session = await getAuthSession();
+
+  if (!session) return notFound();
 
   const followedCommunities = await db.subscription.findMany({
     where: {
@@ -18,7 +21,7 @@ export default async function CustomFeed() {
   const posts = await db.post.findMany({
     where: {
       subreddit: {
-        name: {
+        id: {
           in: followedCommunities.map(({ subreddit }) => subreddit.id),
         },
       },
@@ -34,5 +37,6 @@ export default async function CustomFeed() {
     },
     take: INFINITE_SCROLLING_PAGINATION_RESULTS,
   });
+
   return <PostFeed initialPosts={posts} />;
 }
