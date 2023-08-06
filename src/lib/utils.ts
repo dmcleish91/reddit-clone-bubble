@@ -55,3 +55,14 @@ export function formatTimeToNow(date: Date): string {
     },
   });
 }
+
+export function getVotesAmount(votes: any[]): number {
+  return votes.reduce((acc, vote) => {
+    if (vote.type === 'UP') {
+      return acc + 1;
+    } else if (vote.type === 'DOWN') {
+      return acc - 1;
+    }
+    return acc;
+  }, 0);
+}

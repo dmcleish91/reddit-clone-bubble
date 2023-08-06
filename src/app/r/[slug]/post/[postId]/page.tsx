@@ -1,10 +1,13 @@
+import CommentsSection from '@/components/commentssection';
+import EditorOutput from '@/components/editoroutput';
 import PostVoteServer from '@/components/post-vote/postvoteserver';
 import { buttonVariants } from '@/components/ui/button';
 import { db } from '@/lib/db';
 import { redis } from '@/lib/redis';
+import { formatTimeToNow } from '@/lib/utils';
 import { CachePost } from '@/types/redis-types';
 import { Post, User, Vote } from '@prisma/client';
-import { ArrowBigDown, ArrowBigUp, Loader2 } from 'lucide-react';
+import { ArrowBigDown, ArrowBigUp, Loader, Loader2 } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -56,7 +59,17 @@ export default async function Page({ params }: PageProps) {
         </Suspense>
 
         <div className='sm:w-0 w-full flex-1 bg-white p-4 rounded-sm'>
-          <p></p>
+          <p className='max-h-40 mt-1 turncate text-xs text-gray-500'>
+            Posted by u/{post?.author.username ?? cachedPost.authorUserName}{' '}
+            {formatTimeToNow(new Date(post?.createdAt ?? cachedPost.createdAt))}
+          </p>
+          <h1 className='text-xl font-semibold py-2 leading-6 text-gray-500'>{post?.title ?? cachedPost.title}</h1>
+
+          <EditorOutput content={post?.content ?? cachedPost.content} />
+
+          <Suspense fallback={<Loader2 className='h-5 w-5 animate-spin text-zonc-500' />}>
+            <CommentsSection postId={post?.id ?? cachedPost.id} />
+          </Suspense>
         </div>
       </div>
     </div>
@@ -73,7 +86,7 @@ function PostVoteShell() {
 
       {/*Score*/}
       <div className='text-center py-2 font-medium text-sm text-zinc-900'>
-        <Loader2 className='h3 w-3 animate-spin' />
+        <Loader2 className='h-3 w-3 animate-spin' />
       </div>
 
       {/*Downvote*/}
