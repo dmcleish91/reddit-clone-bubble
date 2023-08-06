@@ -54,6 +54,10 @@ export default async function Page({ params }: PageProps) {
             }}
           />
         </Suspense>
+
+        <div className='sm:w-0 w-full flex-1 bg-white p-4 rounded-sm'>
+          <p></p>
+        </div>
       </div>
     </div>
   );
