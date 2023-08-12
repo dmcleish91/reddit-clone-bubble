@@ -11,11 +11,12 @@ import useCustomToast from '@/hooks/use-custom-toast';
 import { useRouter } from 'next/navigation';
 
 type CreateCommentProps = {
+  user: String;
   postId: string;
   replyToId?: string;
 };
 
-export default function CreateComment({ postId, replyToId }: CreateCommentProps) {
+export default function CreateComment({ user, postId, replyToId }: CreateCommentProps) {
   const [input, setInput] = useState<string>('');
   const { loginToast } = useCustomToast();
   const router = useRouter();
@@ -53,8 +54,8 @@ export default function CreateComment({ postId, replyToId }: CreateCommentProps)
 
   return (
     <div className='grid w-full gap-1.5'>
-      <Label htmlfor='comment'>
-        Comment as <span>u/</span>
+      <Label htmlFor='comment'>
+        Comment as <span>u/{user}</span>
       </Label>
       <div className='mt-2'>
         <Textarea
@@ -62,7 +63,7 @@ export default function CreateComment({ postId, replyToId }: CreateCommentProps)
           value={input}
           onChange={(e) => setInput(e.target.value)}
           rows={1}
-          placeholder="What's on your mind?"
+          placeholder='Join the conversation!'
         />
 
         <div className='mt-2 flex justify-end'>

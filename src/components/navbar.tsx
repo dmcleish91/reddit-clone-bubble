@@ -3,6 +3,7 @@ import { Icons } from './icons';
 import { buttonVariants } from './ui/button';
 import { getAuthSession } from '@/lib/auth';
 import UserAccountNav from './useraccountnav';
+import SearchBar from './searchbar';
 
 export default async function Navbar() {
   const session = await getAuthSession();
@@ -14,7 +15,10 @@ export default async function Navbar() {
           <Icons.ghost className='h-8 w-8 sm:h-6 sm:w-6' />
           <p className='hidden text-zinc-700 text-sm font-medium md:block'>Bubble</p>
         </Link>
+
         {/* search bar */}
+        <SearchBar />
+
         {session?.user ? (
           <UserAccountNav user={session.user} />
         ) : (
