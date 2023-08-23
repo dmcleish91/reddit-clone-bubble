@@ -36,7 +36,7 @@ export default async function CommentsSection({ postId }: CommentsSectionProps) 
       <hr className='w-full h-px my-6' />
 
       {/* TODO: Create comment */}
-      <CreateComment postId={postId} user={session?.user.name ?? ''} />
+      <CreateComment postId={postId} user={session?.user.username ?? ''} />
 
       <div className='flex flex-col gap-y-6 mt-4'>
         {comments

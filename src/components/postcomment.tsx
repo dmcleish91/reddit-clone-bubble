@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { CommentRequest } from '@/lib/validators/comment';
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
+import { useOnClickOutside } from '@/hooks/use-on-click-outside';
 
 type ExtendedComment = Comment & {
   votes: CommentVote[];
@@ -33,6 +34,10 @@ export default function PostComment({ comment, votesAmount, currentVote, postId 
   const commentRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { data: session } = useSession();
+
+  useOnClickOutside(commentRef, () => {
+    setIsReplying(false);
+  });
 
   function createReply() {
     if (!session) router.push('/sign-in');

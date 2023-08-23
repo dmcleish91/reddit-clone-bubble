@@ -14,7 +14,9 @@ import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 
 type UserAccountNavProps = {
-  user: Pick<User, 'name' | 'image' | 'email'>;
+  user: Pick<User, 'name' | 'image' | 'email'> & {
+    username?: string | null;
+  };
 };
 
 export default function UserAccountNav({ user }: UserAccountNavProps) {
@@ -22,12 +24,12 @@ export default function UserAccountNav({ user }: UserAccountNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <UserAvatar className='h-8 w-8' user={{ name: user.name || null, image: user.image || null }} />
+        <UserAvatar className='h-8 w-8' user={{ name: user.username || null, image: user.image || null }} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className='bg-white' align='end'>
         <div className='flex items-center justify-start gap-2 p-2'>
           <div className='flex flex-col space-y-1 leading-none'>
-            {user.name && <p className='font-medium'> {user.name} </p>}
+            {user.name && <p className='font-medium'> {user.username} </p>}
             {user.email && <p className='w-[200px] truncate text-sm text-zinc-700'> {user.email} </p>}
           </div>
         </div>

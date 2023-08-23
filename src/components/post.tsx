@@ -36,7 +36,7 @@ export default function Post({ subredditName, post, commentAmt, votesAmt, curren
                 <span className='px-1'>•</span>
               </>
             ) : null}
-            <span>Created by u/{post.author.name}</span> {formatTimeToNow(new Date(post.createdAt))}
+            <span>Created by u/{post.author.username}</span> {formatTimeToNow(new Date(post.createdAt))}
           </div>
 
           <a href={`/r/${subredditName}/post/${post.id}`}>
