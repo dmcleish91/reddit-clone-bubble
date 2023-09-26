@@ -3,9 +3,7 @@ import EditorOutput from '@/components/editoroutput';
 import PostVoteServer from '@/components/post-vote/postvoteserver';
 import { buttonVariants } from '@/components/ui/button';
 import { db } from '@/lib/db';
-import { redis } from '@/lib/redis';
 import { formatTimeToNow } from '@/lib/utils';
-import { CachePost } from '@/types/redis-types';
 import { Post, User, Vote } from '@prisma/client';
 import { ArrowBigDown, ArrowBigUp, Loader, Loader2 } from 'lucide-react';
 import { notFound } from 'next/navigation';
@@ -21,30 +19,26 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 
 export default async function Page({ params }: PageProps) {
-  const cachedPost = (await redis.hgetall(`post:${params.postId}`)) as CachePost;
-
   let post: (Post & { votes: Vote[]; author: User }) | null = null;
 
-  if (!cachedPost) {
-    post = await db.post.findFirst({
-      where: {
-        id: params.postId,
-      },
-      include: {
-        votes: true,
-        author: true,
-      },
-    });
-  }
+  post = await db.post.findFirst({
+    where: {
+      id: params.postId,
+    },
+    include: {
+      votes: true,
+      author: true,
+    },
+  });
 
-  if (!post && !cachedPost) return notFound();
+  if (!post) return notFound();
 
   return (
     <div>
       <div className='h-full flex flex-col sm:flex-row items-center sm:items-start justify-between'>
         <Suspense fallback={<PostVoteShell />}>
           <PostVoteServer
-            postId={post?.id ?? cachedPost.id}
+            postId={post?.id}
             getData={async () => {
               return await db.post.findUnique({
                 where: {
@@ -60,15 +54,14 @@ export default async function Page({ params }: PageProps) {
 
         <div className='sm:w-0 w-full flex-1 bg-white p-4 rounded-sm'>
           <p className='max-h-40 mt-1 turncate text-xs text-gray-500'>
-            Posted by u/{post?.author.username ?? cachedPost.authorUserName}{' '}
-            {formatTimeToNow(new Date(post?.createdAt ?? cachedPost.createdAt))}
+            Posted by u/{post?.author.username} {formatTimeToNow(new Date(post?.createdAt))}
           </p>
-          <h1 className='text-xl font-semibold py-2 leading-6 text-gray-500'>{post?.title ?? cachedPost.title}</h1>
+          <h1 className='text-xl font-semibold py-2 leading-6 text-gray-500'>{post?.title}</h1>
 
-          <EditorOutput content={post?.content ?? cachedPost.content} />
+          <EditorOutput content={post?.content} />
 
           <Suspense fallback={<Loader2 className='h-5 w-5 animate-spin text-zonc-500' />}>
-            <CommentsSection postId={post?.id ?? cachedPost.id} />
+            <CommentsSection postId={post?.id} />
           </Suspense>
         </div>
       </div>

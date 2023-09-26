@@ -5,6 +5,13 @@ import { db } from '@/lib/db';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import ToFeedButton from '@/components/tofeedbutton';
+
+export const metadata: Metadata = {
+  title: 'Bubble',
+  description: 'Return to a whimsicle reddit experience.',
+};
 
 export default async function Layout({
   children,
@@ -55,7 +62,7 @@ export default async function Layout({
   return (
     <div className='sm:container max-w-7xl mx-auto h-full pt-12'>
       <div>
-        {/* TODO: Button to take us back */}
+        <ToFeedButton />
 
         <div className='grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 py-6'>
           <div className='flex flex-col col-span-2 space-y-6'>{children}</div>
@@ -95,7 +102,7 @@ export default async function Layout({
                 />
               ) : null}
 
-              <Link className={buttonVariants({ variant: 'ghost', className: 'w-full mb-6' })} href={`${slug}/submit`}>
+              <Link className={buttonVariants({ variant: 'secondary', className: 'w-full' })} href={`${slug}/submit`}>
                 Create Post
               </Link>
             </dl>

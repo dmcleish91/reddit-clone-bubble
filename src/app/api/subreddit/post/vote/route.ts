@@ -1,10 +1,6 @@
-import { CACHE_AFTER_UPVOTES } from '@/config';
 import { getAuthSession } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { redis } from '@/lib/redis';
 import { PostVoteValidator } from '@/lib/validators/vote';
-import type { CachePost } from '@/types/redis-types';
-import { Post, User, Vote, VoteType } from '@prisma/client';
 import { z } from 'zod';
 
 export async function PATCH(req: Request) {
@@ -66,8 +62,6 @@ export async function PATCH(req: Request) {
         },
       });
 
-      await checkPostThenRedisCache(post, voteType, postId);
-
       return new Response('OK');
     }
 
@@ -79,8 +73,6 @@ export async function PATCH(req: Request) {
       },
     });
 
-    await checkPostThenRedisCache(post, voteType, postId);
-
     return new Response('OK');
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -88,34 +80,5 @@ export async function PATCH(req: Request) {
     }
 
     return new Response('Could not register your vote, please try again', { status: 500 });
-  }
-}
-
-async function checkPostThenRedisCache(
-  post: Post & {
-    author: User;
-    votes: Vote[];
-  },
-  voteType: VoteType,
-  postId: string
-) {
-  // recount the votes
-  const votesAmount = post.votes.reduce((acc, vote) => {
-    if (vote.type === 'UP') return acc + 1;
-    if (vote.type === 'DOWN') return acc - 1;
-    return acc;
-  }, 0);
-
-  if (votesAmount >= CACHE_AFTER_UPVOTES) {
-    const cachePayload: CachePost = {
-      authorUserName: post.author.username ?? '',
-      content: JSON.stringify(post.content),
-      id: post.id,
-      title: post.title,
-      currentVote: voteType,
-      createdAt: post.createdAt,
-    };
-
-    await redis.hset(`post:${postId}`, cachePayload);
   }
 }
