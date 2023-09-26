@@ -20,7 +20,7 @@ export default function RootLayout({ children, authModal }: { children: React.Re
           <Navbar />
           {authModal}
 
-          <div className='container max-w-full mx-auto h-full pt-12'>{children}</div>
+          <div className='container max-w-7xl mx-auto h-full pt-12'>{children}</div>
         </Providers>
         <Toaster />
       </body>
