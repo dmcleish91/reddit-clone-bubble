@@ -5,7 +5,7 @@ import { SubscribeToSubredditPayload } from '@/lib/validators/subreddit';
 import axios, { AxiosError } from 'axios';
 import useCustomToast from '@/hooks/use-custom-toast';
 import { toast } from '@/hooks/use-toast';
-import { startTransition } from 'react';
+import { startTransition, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 type SubscribeToggle = {
@@ -16,6 +16,7 @@ type SubscribeToggle = {
 
 export default function SubscribeToggle({ subredditId, subredditName, isSubscribed }: SubscribeToggle) {
   const { loginToast } = useCustomToast();
+  const [isOptimisticSubscribed, setIsOptimisticSubscribed] = useState<boolean>(isSubscribed);
   const router = useRouter();
 
   const { mutate: subscribe, isLoading: isSubLoading } = useMutation({
@@ -55,7 +56,7 @@ export default function SubscribeToggle({ subredditId, subredditName, isSubscrib
   const { mutate: unsubscribe, isLoading: isUnsubLoading } = useMutation({
     mutationFn: async () => {
       const payload: SubscribeToSubredditPayload = {
-        subredditId: subredditId,
+        subredditId,
       };
 
       const { data } = await axios.post('/api/subreddit/unsubscribe', payload);
@@ -86,12 +87,24 @@ export default function SubscribeToggle({ subredditId, subredditName, isSubscrib
     },
   });
 
-  return isSubscribed ? (
-    <Button className='w-full mt-1 mb-4' onClick={() => unsubscribe()} isLoading={isUnsubLoading}>
+  return isOptimisticSubscribed ? (
+    <Button
+      className='w-full mt-1 mb-4'
+      onClick={() => {
+        setIsOptimisticSubscribed(false);
+        unsubscribe();
+      }}
+      isLoading={isUnsubLoading}>
       Leave
     </Button>
   ) : (
-    <Button className='w-full mt-1 mb-4' onClick={() => subscribe()} isLoading={isSubLoading}>
+    <Button
+      className='w-full mt-1 mb-4'
+      onClick={() => {
+        setIsOptimisticSubscribed(true);
+        subscribe();
+      }}
+      isLoading={isSubLoading}>
       Join
     </Button>
   );
